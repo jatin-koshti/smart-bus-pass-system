@@ -2,6 +2,8 @@
 > **CodeAlpha Cloud Computing Internship - Task 3**  
 > Built with Python, Flask, SQLAlchemy, PostgreSQL/SQLite, Bootstrap 5, Flask-Login, Bcrypt, QR Code Generation, and Docker.
 
+[![Deploy to Render](https://render.com/images/deploy-to-render.svg)](https://render.com/deploy?repo=https://github.com/jatin-koshti/smart-bus-pass-system)
+
 ---
 
 ## 📌 Project Overview
