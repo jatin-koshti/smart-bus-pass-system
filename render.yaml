@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: smart-bus-pass-system
+    env: python
+    buildCommand: pip install -r requirements.txt && python seed_data.py
+    startCommand: gunicorn run:app
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: smart-bus-db
+          property: connectionString
+      - key: FLASK_ENV
+        value: production
+      - key: PYTHON_VERSION
+        value: 3.11.0
+
+databases:
+  - name: smart-bus-db
+    plan: free
