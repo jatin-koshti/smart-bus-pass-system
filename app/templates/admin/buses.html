@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block title %}Manage Buses - Admin{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="fw-bold mb-1">Bus Fleet Management</h3>
+            <p class="text-muted small mb-0">Add, view, and manage active buses</p>
+        </div>
+        <a href="{{ url_for('admin.dashboard') }}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left me-1"></i> Back to Dashboard</a>
+    </div>
+
+    <div class="row g-4">
+        <!-- Add Bus Form -->
+        <div class="col-md-4">
+            <div class="card card-custom p-4">
+                <h5 class="fw-bold mb-3">Add New Bus</h5>
+                <form action="{{ url_for('admin.buses') }}" method="POST">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <div class="mb-3">
+                        <label class="form-label font-medium">Bus Name</label>
+                        <input type="text" name="bus_name" class="form-control" placeholder="Express Shuttle" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label font-medium">Bus Number</label>
+                        <input type="text" name="bus_number" class="form-control" placeholder="BUS-101" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label font-medium">Assigned Route</label>
+                        <select name="route_id" class="form-select" required>
+                            {% for r in routes %}
+                                <option value="{{ r.id }}">{{ r.source }} &rarr; {{ r.destination }} (${{ r.base_price }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <label class="form-label font-medium">Seats</label>
+                            <input type="number" name="total_seats" class="form-control" value="40" min="10" max="60">
+                        </div>
+                        <div class="col-6 mb-3">
+                            <label class="form-label font-medium">Bus Type</label>
+                            <select name="bus_type" class="form-select">
+                                <option value="Express">Express</option>
+                                <option value="AC Standard">AC Standard</option>
+                                <option value="Non-AC Standard">Non-AC Standard</option>
+                                <option value="Luxury Sleeper">Luxury Sleeper</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <label class="form-label font-medium">Dep. Time</label>
+                            <input type="text" name="departure_time" class="form-control" value="08:00 AM">
+                        </div>
+                        <div class="col-6 mb-3">
+                            <label class="form-label font-medium">Arr. Time</label>
+                            <input type="text" name="arrival_time" class="form-control" value="12:00 PM">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 fw-semibold">Add Bus</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Buses Table -->
+        <div class="col-md-8">
+            <div class="card card-custom p-4">
+                <h5 class="fw-bold mb-3">Active Bus Fleet ({{ buses|length }})</h5>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0 small">
+                        <thead>
+                            <tr>
+                                <th>Bus Name</th>
+                                <th>Number</th>
+                                <th>Route</th>
+                                <th>Seats</th>
+                                <th>Type</th>
+                                <th class="text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for b in buses %}
+                                <tr>
+                                    <td class="fw-semibold">{{ b.bus_name }}</td>
+                                    <td><span class="badge bg-secondary font-monospace">{{ b.bus_number }}</span></td>
+                                    <td>{{ b.route.source }} &rarr; {{ b.route.destination }}</td>
+                                    <td>{{ b.total_seats }}</td>
+                                    <td><span class="badge bg-info-subtle text-info-emphasis">{{ b.bus_type }}</span></td>
+                                    <td class="text-end">
+                                        <form action="{{ url_for('admin.delete_bus', bus_id=b.id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this bus?');">
+                                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                            <button type="submit" class="btn btn-outline-danger btn-sm"><i class="bi bi-trash"></i></button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr><td colspan="6" class="text-center text-muted">No buses added yet</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

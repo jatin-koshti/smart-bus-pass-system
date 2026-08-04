@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}User Profile - Smart Bus Pass System{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card card-custom p-4">
+                <div class="d-flex align-items-center gap-3 pb-3 border-bottom mb-4">
+                    <div class="bg-primary text-white d-flex align-items-center justify-content-center rounded-circle fs-2" style="width: 70px; height: 70px;">
+                        {{ user.full_name[0].upper() }}
+                    </div>
+                    <div>
+                        <h3 class="fw-bold mb-1">{{ user.full_name }}</h3>
+                        <p class="text-muted mb-0"><i class="bi bi-envelope me-1"></i> {{ user.email }} | <span class="badge bg-secondary">{{ user.role }}</span></p>
+                    </div>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="p-3 bg-light rounded border">
+                            <small class="text-muted d-block mb-1">Phone Number</small>
+                            <span class="fw-semibold">{{ user.phone or 'Not Provided' }}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-3 bg-light rounded border">
+                            <small class="text-muted d-block mb-1">Account Created</small>
+                            <span class="fw-semibold">{{ user.created_at.strftime('%B %d, %Y') }}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-3 bg-light rounded border">
+                            <small class="text-muted d-block mb-1">Total Tickets Booked</small>
+                            <span class="fw-semibold fs-5 text-primary">{{ user.tickets|length }}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-3 bg-light rounded border">
+                            <small class="text-muted d-block mb-1">Active Bus Passes</small>
+                            <span class="fw-semibold fs-5 text-success">{{ user.passes|length }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2 mt-4 pt-3 border-top">
+                    <a href="{{ url_for('booking.my_tickets') }}" class="btn btn-outline-primary"><i class="bi bi-ticket-perforated me-1"></i> View Tickets</a>
+                    <a href="{{ url_for('passes.my_passes') }}" class="btn btn-outline-success"><i class="bi bi-card-checklist me-1"></i> View Bus Passes</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

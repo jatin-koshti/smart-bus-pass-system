@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Ticket {{ ticket.ticket_code }} - Smart Bus Pass System{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-7">
+            <div class="card ticket-card shadow-lg mb-4">
+                <div class="ticket-header d-flex justify-content-between align-items-center">
+                    <div>
+                        <h4 class="mb-0 fw-bold"><i class="bi bi-bus-front-fill me-2"></i> E-Ticket Confirmation</h4>
+                        <small class="text-white-50">Smart Bus Pass & Ticket Booking System</small>
+                    </div>
+                    <span class="badge bg-success px-3 py-2 text-uppercase fs-6">{{ ticket.payment_status }}</span>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row align-items-center mb-4">
+                        <div class="col-sm-8">
+                            <h3 class="fw-bold mb-1">{{ ticket.route.source }} &rarr; {{ ticket.route.destination }}</h3>
+                            <p class="text-muted mb-2"><i class="bi bi-calendar-event me-1"></i> Date of Travel: <strong class="text-dark">{{ ticket.travel_date }}</strong></p>
+                            <p class="text-muted mb-0"><i class="bi bi-person-fill me-1"></i> Passenger: <strong>{{ ticket.user.full_name }}</strong></p>
+                        </div>
+                        <div class="col-sm-4 text-center mt-3 mt-sm-0">
+                            <!-- QR Code Base64 Render -->
+                            <img src="{{ qr_data_uri }}" alt="QR Code Ticket" class="img-fluid rounded border p-1" style="max-width: 140px;">
+                            <small class="d-block text-muted mt-1 font-monospace">{{ ticket.ticket_code }}</small>
+                        </div>
+                    </div>
+
+                    <div class="bg-light p-3 rounded mb-4 border">
+                        <div class="row text-center">
+                            <div class="col-4 border-end">
+                                <small class="text-muted d-block">Bus Number</small>
+                                <span class="fw-bold">{{ ticket.bus.bus_number }}</span>
+                            </div>
+                            <div class="col-4 border-end">
+                                <small class="text-muted d-block">Seat Number</small>
+                                <span class="fw-bold text-primary fs-5">{{ ticket.seat_number }}</span>
+                            </div>
+                            <div class="col-4">
+                                <small class="text-muted d-block">Total Fare</small>
+                                <span class="fw-bold text-success fs-5">${{ ticket.fare }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row small text-muted">
+                        <div class="col-6">
+                            <p class="mb-1"><strong>Bus Type:</strong> {{ ticket.bus.bus_type }}</p>
+                            <p class="mb-0"><strong>Departure:</strong> {{ ticket.bus.departure_time }}</p>
+                        </div>
+                        <div class="col-6 text-end">
+                            <p class="mb-1"><strong>Booked On:</strong> {{ ticket.booked_at.strftime('%Y-%m-%d %H:%M') }}</p>
+                            <p class="mb-0"><strong>Status:</strong> Valid for boarding</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center no-print">
+                <a href="{{ url_for('booking.my_tickets') }}" class="btn btn-outline-secondary"><i class="bi bi-arrow-left me-1"></i> Back to My Tickets</a>
+                <button onclick="window.print();" class="btn btn-primary btn-print"><i class="bi bi-printer me-1"></i> Download / Print E-Ticket</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

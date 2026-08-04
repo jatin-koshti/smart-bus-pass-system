@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}Search Buses - Smart Bus Pass System{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Filter Bar -->
+    <div class="card card-custom p-3 mb-4">
+        <form action="{{ url_for('main.search') }}" method="GET" class="row g-2 align-items-center">
+            <div class="col-md-4">
+                <select name="source" class="form-select">
+                    <option value="">All Sources</option>
+                    {% for s in all_sources %}
+                        <option value="{{ s }}" {% if s == source %}selected{% endif %}>{{ s }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4">
+                <select name="destination" class="form-select">
+                    <option value="">All Destinations</option>
+                    {% for d in all_destinations %}
+                        <option value="{{ d }}" {% if d == destination %}selected{% endif %}>{{ d }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-primary w-100 fw-semibold"><i class="bi bi-funnel me-1"></i> Filter Buses</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Results -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="fw-bold mb-0">Available Buses</h4>
+        <span class="badge bg-secondary px-3 py-2">{{ buses|length }} Buses Found</span>
+    </div>
+
+    {% if buses %}
+        <div class="row g-4">
+            {% for bus in buses %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card card-custom h-100">
+                        <div class="card-body p-4 d-flex flex-column justify-content-between">
+                            <div>
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="badge bg-info-subtle text-info-emphasis border">{{ bus.bus_type }}</span>
+                                    <span class="fw-bold fs-5 text-primary">${{ bus.route.base_price }}</span>
+                                </div>
+                                <h5 class="fw-bold mb-1">{{ bus.bus_name }}</h5>
+                                <p class="text-muted small mb-3"><i class="bi bi-hash"></i> {{ bus.bus_number }}</p>
+                                
+                                <div class="bg-light p-3 rounded mb-3">
+                                    <div class="fw-semibold text-dark mb-1">
+                                        {{ bus.route.source }} <i class="bi bi-arrow-right mx-1 text-primary"></i> {{ bus.route.destination }}
+                                    </div>
+                                    <div class="small text-muted d-flex justify-content-between">
+                                        <span>Departure: {{ bus.departure_time }}</span>
+                                        <span>Duration: {{ bus.route.estimated_duration }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <a href="{{ url_for('booking.select_seats', bus_id=bus.id) }}" class="btn btn-primary w-100 fw-semibold">
+                                Select Seats
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="card card-custom p-5 text-center">
+            <i class="bi bi-bus-front text-muted display-4 mb-3"></i>
+            <h5 class="fw-bold">No buses found</h5>
+            <p class="text-muted small">Try adjusting your source or destination search filters.</p>
+            <div>
+                <a href="{{ url_for('main.search') }}" class="btn btn-outline-primary btn-sm">Reset Filters</a>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

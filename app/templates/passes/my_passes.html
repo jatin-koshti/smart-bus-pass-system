@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}My Bus Passes - Smart Bus Pass System{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="fw-bold mb-1">My Active & Past Bus Passes</h3>
+            <p class="text-muted small mb-0">Manage digital transit passes and QR tokens</p>
+        </div>
+        <a href="{{ url_for('passes.buy_pass') }}" class="btn btn-primary btn-sm fw-semibold"><i class="bi bi-plus-lg me-1"></i> Buy New Bus Pass</a>
+    </div>
+
+    {% if passes %}
+        <div class="row g-4">
+            {% for p in passes %}
+                {% set is_active = p.status == 'ACTIVE' and p.valid_to >= today %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card card-custom h-100 p-4 d-flex flex-column justify-content-between">
+                        <div>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="badge {% if is_active %}bg-success{% else %}bg-secondary{% endif %} px-3 py-2">
+                                    {% if is_active %}ACTIVE PASS{% else %}EXPIRED{% endif %}
+                                </span>
+                                <span class="fw-bold text-primary font-monospace">{{ p.pass_code }}</span>
+                            </div>
+                            <h5 class="fw-bold mb-1">{{ p.pass_type }} Bus Pass</h5>
+                            <p class="text-muted small mb-3">Fare Paid: <strong>${{ p.fare }}</strong></p>
+
+                            <div class="bg-light p-3 rounded mb-3 border small">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span class="text-muted">Valid From:</span>
+                                    <span class="fw-semibold">{{ p.valid_from }}</span>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <span class="text-muted">Valid To:</span>
+                                    <span class="fw-semibold">{{ p.valid_to }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <a href="{{ url_for('passes.pass_details', pass_code=p.pass_code) }}" class="btn btn-outline-primary w-100 fw-semibold">
+                            <i class="bi bi-qr-code-scan me-1"></i> View Digital Pass
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="card card-custom p-5 text-center">
+            <i class="bi bi-card-heading text-muted display-4 mb-3"></i>
+            <h5 class="fw-bold">No bus passes purchased</h5>
+            <p class="text-muted small">Save money on regular commutes with a Daily, Weekly, or Monthly bus pass.</p>
+            <div>
+                <a href="{{ url_for('passes.buy_pass') }}" class="btn btn-primary btn-sm">Buy Bus Pass</a>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

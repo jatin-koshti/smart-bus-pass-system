@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block title %}Checkout - Smart Bus Pass System{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card card-custom p-4">
+                <div class="text-center mb-4">
+                    <div class="bg-success text-white d-inline-flex align-items-center justify-content-center rounded-circle mb-3" style="width: 60px; height: 60px;">
+                        <i class="bi bi-credit-card-2-front fs-3"></i>
+                    </div>
+                    <h3 class="fw-bold mb-1">Demo Payment Checkout</h3>
+                    <p class="text-muted small">Simulated Payment Gateway (No actual charges applied)</p>
+                </div>
+
+                <div class="bg-light p-3 rounded mb-4 border">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="text-muted">Item Type:</span>
+                        <span class="badge bg-primary fs-6">{{ item_type }}</span>
+                    </div>
+                    {% if item_type == 'TICKET' and bus %}
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="text-muted">Bus & Seat:</span>
+                            <span class="fw-semibold">{{ bus.bus_name }} (Seat {{ seat_number }})</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="text-muted">Travel Date:</span>
+                            <span class="fw-semibold">{{ travel_date }}</span>
+                        </div>
+                    {% elif item_type == 'PASS' %}
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="text-muted">Pass Plan:</span>
+                            <span class="fw-semibold">{{ pass_type }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="text-muted">Validity:</span>
+                            <span class="fw-semibold">{{ valid_from }} to {{ valid_to }}</span>
+                        </div>
+                    {% endif %}
+                    <hr class="my-2">
+                    <div class="d-flex justify-content-between align-items-center fs-5 fw-bold text-dark">
+                        <span>Total Amount Due:</span>
+                        <span class="text-success">${{ amount }}</span>
+                    </div>
+                </div>
+
+                <form action="{{ url_for('payment.process_payment') }}" method="POST">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="item_type" value="{{ item_type }}">
+                    <input type="hidden" name="amount" value="{{ amount }}">
+                    <input type="hidden" name="bus_id" value="{{ bus.id if bus else '' }}">
+                    <input type="hidden" name="seat_number" value="{{ seat_number or '' }}">
+                    <input type="hidden" name="travel_date" value="{{ travel_date or '' }}">
+                    <input type="hidden" name="pass_type" value="{{ pass_type or '' }}">
+                    <input type="hidden" name="valid_from" value="{{ valid_from or '' }}">
+                    <input type="hidden" name="valid_to" value="{{ valid_to or '' }}">
+
+                    <div class="mb-3">
+                        <label class="form-label font-medium"><i class="bi bi-wallet2 me-1"></i> Payment Method</label>
+                        <select name="payment_method" class="form-select">
+                            <option value="Credit Card">Credit / Debit Card (Simulated)</option>
+                            <option value="UPI Instant">UPI / Instant QR Payment</option>
+                            <option value="Net Banking">Net Banking</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label font-medium"><i class="bi bi-person me-1"></i> Cardholder / Account Name</label>
+                        <input type="text" class="form-control" value="{{ current_user.full_name }}" required>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-8 mb-3">
+                            <label class="form-label font-medium">Card / Virtual Number</label>
+                            <input type="text" class="form-control font-monospace" value="4532 •••• •••• 8821" required>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label font-medium">CVV</label>
+                            <input type="text" class="form-control font-monospace" value="123" required>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-success w-100 py-2 fs-5 fw-bold mt-2">
+                        <i class="bi bi-lock-fill me-1"></i> Pay ${{ amount }} Now
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

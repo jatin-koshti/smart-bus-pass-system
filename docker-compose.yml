@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - SECRET_KEY=codealpha-cloud-task3-secret-key-2026
+      - DATABASE_URL=postgresql://bus_admin:SecurePass123!@db:5432/smart_bus_db
+      - FLASK_ENV=production
+    depends_on:
+      - db
+    restart: always
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=bus_admin
+      - POSTGRES_PASSWORD=SecurePass123!
+      - POSTGRES_DB=smart_bus_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: always
+
+volumes:
+  postgres_data:

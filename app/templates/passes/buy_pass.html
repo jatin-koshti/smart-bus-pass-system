@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}Buy Bus Pass - Smart Bus Pass System{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="text-center mb-5">
+        <h2 class="fw-bold">Choose Your Smart Bus Pass</h2>
+        <p class="text-muted">Enjoy unlimited commuting discounts with instant QR verification</p>
+    </div>
+
+    <form action="{{ url_for('passes.buy_pass') }}" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        
+        <div class="row justify-content-center mb-4">
+            <div class="col-md-4">
+                <div class="card card-custom p-3 text-center">
+                    <label class="form-label font-medium mb-1"><i class="bi bi-calendar-check text-primary me-1"></i> Pass Activation Start Date</label>
+                    <input type="date" name="start_date" value="{{ today_str }}" min="{{ today_str }}" class="form-control text-center" required>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4 justify-content-center">
+            <!-- Daily Pass -->
+            <div class="col-md-4">
+                <div class="card card-custom p-4 h-100 text-center d-flex flex-column justify-content-between">
+                    <div>
+                        <span class="badge bg-secondary mb-3">Single Day Pass</span>
+                        <h4 class="fw-bold">Daily Pass</h4>
+                        <h2 class="fw-bold text-primary my-3">$150 <small class="fs-6 text-muted">/ day</small></h2>
+                        <ul class="list-unstyled text-muted small text-start my-3">
+                            <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Valid for 24 Hours</li>
+                            <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> 50% discount on single rides</li>
+                            <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Digital QR Pass on Mobile</li>
+                        </ul>
+                    </div>
+                    <button type="submit" name="pass_type" value="DAILY" class="btn btn-outline-primary w-100 fw-semibold mt-3">
+                        Buy Daily Pass
+                    </button>
+                </div>
+            </div>
+
+            <!-- Weekly Pass -->
+            <div class="col-md-4">
+                <div class="card card-custom p-4 h-100 text-center border-primary d-flex flex-column justify-content-between position-relative shadow">
+                    <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-primary px-3 py-2 text-uppercase">Most Popular</span>
+                    <div>
+                        <span class="badge bg-primary-subtle text-primary mt-2 mb-3">7 Days Transit</span>
+                        <h4 class="fw-bold">Weekly Pass</h4>
+                        <h2 class="fw-bold text-primary my-3">$800 <small class="fs-6 text-muted">/ week</small></h2>
+                        <ul class="list-unstyled text-muted small text-start my-3">
+                            <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Valid for 7 consecutive days</li>
+                            <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Priority seat reservation access</li>
+                            <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> 50% discount on all routes</li>
+                        </ul>
+                    </div>
+                    <button type="submit" name="pass_type" value="WEEKLY" class="btn btn-primary w-100 fw-semibold mt-3">
+                        Buy Weekly Pass
+                    </button>
+                </div>
+            </div>
+
+            <!-- Monthly Pass -->
+            <div class="col-md-4">
+                <div class="card card-custom p-4 h-100 text-center d-flex flex-column justify-content-between">
+                    <div>
+                        <span class="badge bg-success mb-3">30 Days Savings</span>
+                        <h4 class="fw-bold">Monthly Pass</h4>
+                        <h2 class="fw-bold text-primary my-3">$2500 <small class="fs-6 text-muted">/ month</small></h2>
+                        <ul class="list-unstyled text-muted small text-start my-3">
+                            <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Valid for 30 consecutive days</li>
+                            <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Maximum commuting savings</li>
+                            <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Unlimited route discounts</li>
+                        </ul>
+                    </div>
+                    <button type="submit" name="pass_type" value="MONTHLY" class="btn btn-outline-primary w-100 fw-semibold mt-3">
+                        Buy Monthly Pass
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

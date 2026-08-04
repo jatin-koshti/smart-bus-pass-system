@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Routes Catalog - Smart Bus Pass System{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="fw-bold mb-1">Bus Routes Catalog</h3>
+            <p class="text-muted small mb-0">Explore active transit routes and distance details</p>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        {% for r in routes %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card card-custom p-4 h-100">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div class="bg-primary text-white rounded p-2 text-center" style="min-width: 45px;">
+                            <i class="bi bi-signpost-split fs-4"></i>
+                        </div>
+                        <span class="badge bg-success-subtle text-success-emphasis px-3 py-2 fw-semibold">${{ r.base_price }} Base</span>
+                    </div>
+
+                    <h5 class="fw-bold mb-2">{{ r.source }} &rarr; {{ r.destination }}</h5>
+                    <div class="text-muted small mb-3">
+                        <p class="mb-1"><i class="bi bi-speedometer me-1"></i> Distance: {{ r.distance_km }} km</p>
+                        <p class="mb-1"><i class="bi bi-clock me-1"></i> Est. Duration: {{ r.estimated_duration }}</p>
+                        <p class="mb-0"><i class="bi bi-bus-front me-1"></i> Assigned Buses: {{ r.buses|length }}</p>
+                    </div>
+
+                    <div class="mt-auto pt-3 border-top">
+                        <a href="{{ url_for('main.search', source=r.source, destination=r.destination) }}" class="btn btn-outline-primary w-100 btn-sm fw-semibold">
+                            Find Buses For This Route
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

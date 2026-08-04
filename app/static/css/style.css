@@ -1,0 +1,121 @@
+/* Simple, Clean, and Functional Styling for Smart Bus Pass System */
+:root {
+    --primary-color: #0d6efd;
+    --secondary-color: #212529;
+    --bg-light: #f8f9fa;
+    --border-color: #dee2e6;
+}
+
+body {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-light);
+    color: #212529;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+/* Navbar branding */
+.navbar-brand {
+    font-weight: 600;
+}
+
+/* Simple Clean Cards */
+.card-custom {
+    background-color: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+/* Hero Section with solid color and no complex gradient */
+.hero-section {
+    background-color: #212529;
+    color: #ffffff;
+    padding: 40px 0;
+    margin-bottom: 30px;
+    border-radius: 0;
+}
+
+/* Simple Seat Selection Grid */
+.seat-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    max-width: 280px;
+    margin: 0 auto;
+    padding: 15px;
+    background: #e9ecef;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.seat-item {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid #ced4da;
+    background-color: #ffffff;
+    user-select: none;
+    font-size: 14px;
+}
+
+.seat-item:hover:not(.occupied) {
+    border-color: var(--primary-color);
+    background-color: #e7f1ff;
+}
+
+.seat-item.selected {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+    border-color: var(--primary-color) !important;
+}
+
+.seat-item.occupied {
+    background-color: #6c757d;
+    color: white;
+    cursor: not-allowed;
+    border-color: #6c757d;
+}
+
+.aisle-gap {
+    grid-column: span 1;
+}
+
+/* Ticket & Pass Layout */
+.ticket-card {
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.ticket-header {
+    background: var(--secondary-color);
+    color: white;
+    padding: 12px 20px;
+}
+
+/* Print layout optimizations */
+@media print {
+    .no-print, nav, footer, .btn-print {
+        display: none !important;
+    }
+    body {
+        background: white;
+    }
+    .ticket-card {
+        border: 1px solid #000;
+        box-shadow: none;
+    }
+}
+

@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Bus Pass {{ bus_pass.pass_code }} - Smart Bus Pass System{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card ticket-card shadow-lg mb-4">
+                <div class="ticket-header d-flex justify-content-between align-items-center bg-dark text-white">
+                    <div>
+                        <h4 class="mb-0 fw-bold"><i class="bi bi-card-heading me-2"></i> Official Digital Bus Pass</h4>
+                        <small class="text-white-50">{{ bus_pass.pass_type }} TRANSIT PASS</small>
+                    </div>
+                    <span class="badge bg-success px-3 py-2 text-uppercase fs-6">{{ bus_pass.status }}</span>
+                </div>
+                <div class="card-body p-4 text-center">
+                    <div class="mb-3">
+                        <img src="{{ qr_data_uri }}" alt="QR Code Bus Pass" class="img-fluid rounded border p-2" style="max-width: 180px;">
+                        <small class="d-block text-muted mt-2 font-monospace fw-bold fs-6">{{ bus_pass.pass_code }}</small>
+                    </div>
+
+                    <h4 class="fw-bold mb-1">{{ bus_pass.user.full_name }}</h4>
+                    <p class="text-muted small mb-4"><i class="bi bi-envelope me-1"></i> {{ bus_pass.user.email }}</p>
+
+                    <div class="bg-light p-3 rounded mb-3 border">
+                        <div class="row text-center">
+                            <div class="col-6 border-end">
+                                <small class="text-muted d-block">Valid From</small>
+                                <span class="fw-bold text-dark">{{ bus_pass.valid_from }}</span>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted d-block">Valid To</small>
+                                <span class="fw-bold text-dark">{{ bus_pass.valid_to }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between small text-muted">
+                        <span>Pass Fee: <strong>${{ bus_pass.fare }}</strong></span>
+                        <span>Purchased: <strong>{{ bus_pass.purchased_at.strftime('%Y-%m-%d') }}</strong></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center no-print">
+                <a href="{{ url_for('passes.my_passes') }}" class="btn btn-outline-secondary"><i class="bi bi-arrow-left me-1"></i> My Passes</a>
+                <button onclick="window.print();" class="btn btn-primary btn-print"><i class="bi bi-printer me-1"></i> Print Bus Pass</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

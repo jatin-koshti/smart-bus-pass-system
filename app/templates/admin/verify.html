@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Verify QR Ticket / Pass - Admin{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-7">
+            <div class="card card-custom p-4">
+                <div class="text-center mb-4">
+                    <div class="bg-warning text-dark d-inline-flex align-items-center justify-content-center rounded-circle mb-3" style="width: 60px; height: 60px;">
+                        <i class="bi bi-qr-code-scan fs-3"></i>
+                    </div>
+                    <h3 class="fw-bold mb-1">Ticket & Pass QR Verifier</h3>
+                    <p class="text-muted small">Enter Ticket Code, Pass Code, or paste raw QR payload string to validate validity</p>
+                </div>
+
+                <form method="POST" action="{{ url_for('admin.verify') }}" class="mb-4">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <div class="input-group input-group-lg">
+                        <input type="text" name="token" class="form-control font-monospace" placeholder="e.g. TCK-A1B2C3D4 or PSS-X9Y8Z7" required>
+                        <button type="submit" class="btn btn-warning fw-bold px-4">
+                            <i class="bi bi-shield-check me-1"></i> Verify Now
+                        </button>
+                    </div>
+                </form>
+
+                {% if result %}
+                    <div class="border rounded p-4 mt-3 {% if result.valid %}bg-success-subtle border-success{% else %}bg-danger-subtle border-danger{% endif %}">
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            {% if result.valid %}
+                                <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                                    <i class="bi bi-check-lg fs-3"></i>
+                                </div>
+                                <div>
+                                    <h4 class="fw-bold text-success mb-0">VALID & VERIFIED {{ result.type }}</h4>
+                                    <small class="text-success-emphasis">Cryptographic Signature Validated</small>
+                                </div>
+                            {% else %}
+                                <div class="bg-danger text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                                    <i class="bi bi-x-lg fs-3"></i>
+                                </div>
+                                <div>
+                                    <h4 class="fw-bold text-danger mb-0">INVALID / FORGED TOKEN</h4>
+                                    <small class="text-danger-emphasis">{{ result.message or 'Verification Failed' }}</small>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        {% if result.valid %}
+                            <div class="card p-3 border-0 shadow-sm text-dark bg-white">
+                                <ul class="list-unstyled mb-0 small">
+                                    <li class="mb-2"><strong>Code:</strong> <span class="font-monospace text-primary fw-bold">{{ result.code }}</span></li>
+                                    <li class="mb-2"><strong>Passenger Name:</strong> {{ result.user }} ({{ result.email }})</li>
+                                    {% if result.type == 'TICKET' %}
+                                        <li class="mb-2"><strong>Bus & Seat:</strong> {{ result.bus }} | Seat <strong class="text-primary">{{ result.seat }}</strong></li>
+                                        <li class="mb-2"><strong>Route:</strong> {{ result.route }}</li>
+                                        <li class="mb-0"><strong>Travel Date:</strong> {{ result.travel_date }}</li>
+                                    {% elif result.type == 'BUS PASS' %}
+                                        <li class="mb-2"><strong>Pass Plan:</strong> {{ result.pass_type }}</li>
+                                        <li class="mb-0"><strong>Valid Window:</strong> {{ result.valid_from }} to {{ result.valid_to }}</li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
